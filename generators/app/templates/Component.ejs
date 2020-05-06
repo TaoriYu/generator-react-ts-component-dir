@@ -1,8 +1,7 @@
 import React from 'react';
+<% if (with_styles) { -%>
 import styles from './<%= styles_name %>';
-// <% if (with_styles == true) { %>
-// <% } %>
-
+<% } %>
 export function <%= component_name %>() {
   return (
 
