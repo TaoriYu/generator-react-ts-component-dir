@@ -9,65 +9,100 @@ module.exports = class extends Generator {
     // Calling the super constructor is important so our generator is correctly set up
     super(args, opts);
 
-    // TODO: descriptions
-    this.argument('component_name', { type: String, optional: true, default: 'Component' });
-    this.argument('path', { optional: true, default: './' });
+    this._createComponentNameArgument();
+    this._createPathArgument();
 
-    // this.option('styles', {
-    //   desc: 'styles will not be generated if this option is added',
-    //   alias: 'nos',
-    //   type: Boolean,
-    //   default: true
-    // });
+    this._createStylesOption();
+    this._createLessOption();
+    this._createSassOption();
+
+    if (this.options.less === true && this.options.sass === true) {
+      this.log('Wrong flags combination! Choose either less or sass.');
+    }
   }
 
   async prompting() {
     this.log(yosay(`Welcome to the react component generator!`));
-
-    const prompts = [
-      // {
-      //   type: 'input',
-      //   name: 'component_name',
-      //   message: 'What is the name of this component?',
-      //   default: 'Component'
-      // }
-    ];
-
-    this.props = await  this.prompt(prompts);
-    // return this.prompt(prompts).then(props => {
-    //   // To access props later use this.props.someAnswer;
-    // });
   }
 
   writing() {
-    const dir = mkdirp.sync(`${this.options['path']}/${this._capitalize(this.options['component_name'])}`);
+    const capitalizeComponentName = this._capitalize(this.options['component_name']);
+    const dir = mkdirp.sync(`${this.options['path']}/${capitalizeComponentName}`);
+    let stylesExt = 'css';
+
+    if (this.options['less']) stylesExt = 'less';
+    if (this.options['sass']) stylesExt = 'sass';
+
+    const styleFilename = `${this.options['component_name'].toLowerCase()}.${stylesExt}`;
+
 
     this.fs.copyTpl(
-      this.templatePath('Component.tsx'),
-      this.destinationPath(dir, `${this._capitalize(this.options['component_name'])}.tsx`),
+      this.templatePath('Component.ejs'),
+      this.destinationPath(dir, `${capitalizeComponentName}.tsx`),
       {
-        component_name: this._capitalize(this.options['component_name']),
-        styles_name: this.options['component_name'].toLowerCase()
+        component_name: capitalizeComponentName,
+        styles_name: styleFilename,
+        with_styles: this.options['styles']
       }
     );
 
     this.fs.copyTpl(
-      this.templatePath('index.ts'),
+      this.templatePath('reexport.ejs'),
       this.destinationPath(dir, 'index.ts'),
-      { component_name: this._capitalize(this.options['component_name']) }
+      { component_name: capitalizeComponentName }
     );
 
-    this.fs.copyTpl(
-      this.templatePath('component.css'),
-      this.destinationPath(dir, `${this.options['component_name'].toLowerCase()}.css`)
-    );
+    if (this.options['styles'] === true) {
+      this.fs.copyTpl(this.templatePath('styles.ejs'), this.destinationPath(dir, styleFilename));
+    }
   }
 
   _capitalize(str) {
     return str[0].toUpperCase().concat(str.slice(1));
   }
 
-  // install() {
-  //   this.installDependencies();
-  // }
+  _createComponentNameArgument() {
+    return this.argument('component_name', {
+      desc: 'name of the component',
+      type: String,
+      optional: true,
+      default: 'Component'
+    });
+  }
+
+  _createPathArgument() {
+    return this.argument('path', {
+      desc: 'path where to generate component',
+      type: String,
+      optional: true,
+      default: './'
+    });
+  }
+
+  _createStylesOption() {
+    return this.option('styles', {
+      desc: 'styles will not be generated if this option is added',
+      alias: 's',
+      type: Boolean,
+      default: true
+    });
+  }
+
+  _createLessOption() {
+    return this.option('less', {
+      desc: 'generate less styles files if set',
+      alias: 'le',
+      type: Boolean,
+      default: false
+    });
+  }
+
+  _createSassOption() {
+    return this.option('sass', {
+      desc: 'generate sass styles files if set',
+      alias: 'sa',
+      type: Boolean,
+      default: false
+    });
+  }
 };
