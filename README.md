@@ -1,5 +1,4 @@
-# generator-react-ts-component-dir [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> 
+# generator-react-ts-component-dir
 
 ## Installation
 
@@ -10,27 +9,77 @@ npm install -g yo
 npm install -g generator-react-ts-component-dir
 ```
 
-Then generate your new project:
+Then generate directory with React component:
 
 ```bash
 yo react-ts-component-dir
 ```
 
-## Getting To Know Yeoman
+## What this generator does
 
- * Yeoman has a heart of gold.
- * Yeoman is a person with feelings and opinions, but is very easy to work with.
- * Yeoman can be too opinionated at times but is easily convinced not to be.
- * Feel free to [learn more about Yeoman](http://yeoman.io/).
+This generator has been made as a convenient way to create React component
+inside the directory with all necessary files.
+
+## API
+
+```bash
+yo react-ts-component-dir [component_name] [path] [--styles] [--less] [--sass]
+```
+### component_name
+This parameter provides a component name, making it uppercase automatically.
+However, be aware of typing names in camelcase:
+```bash
+yo react-ts-component-dir header // -> ✔ Header dir will be generated
+yo react-ts-component-dir anotherHeader // -> ✔ AnotherHeader dir will be generated
+yo react-ts-component-dir anotherheader // -> ✖ Anotherheader dir will be generated
+```
+This parameter is not required, so generator will fallback into "Component" name if not provided%
+```bash
+yo react-ts-component-dir // -> Component component will be generated
+```
+
+### path
+This parameter provides a path in which generator should create component's directory.
+It's not required, so generator will fallback into './' path if not provided.
+```bash
+yo react-ts-component-dir header
+...
+- store
+- components
+- Header <- will be generated here
+- utils
+...
+
+yo react-ts-component-dir header ./components/MainLayout
+
+...
+- store
+- components
+  - MainLayout
+    - Header <- will be generated here
+- utils
+...
+```
+
+### --styles
+- shortcut: --s
+- default value: true
+
+Generator will add stylesheet file into the dir. To prevent this behaviour
+call generator with --no-styles option.
+
+### --less
+- shortcut: --le
+- default value: false
+
+Generator will add .less stylesheet into the component's dir if provided.
+
+### --sass
+- shortcut: --sa
+- default value: false
+
+Generator will add .sass stylesheet into the component's dir if provided.
 
 ## License
 
-MIT © [Olga Klimonova]()
-
-
-[npm-image]: https://badge.fury.io/js/generator-react-ts-component-dir.svg
-[npm-url]: https://npmjs.org/package/generator-react-ts-component-dir
-[travis-image]: https://travis-ci.com/TaoriYu/generator-react-ts-component-dir.svg?branch=master
-[travis-url]: https://travis-ci.com/TaoriYu/generator-react-ts-component-dir
-[daviddm-image]: https://david-dm.org/TaoriYu/generator-react-ts-component-dir.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/TaoriYu/generator-react-ts-component-dir
+MIT © Olga Klimonova
