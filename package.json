@@ -1,6 +1,6 @@
 {
   "name": "generator-react-ts-component-dir",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "",
   "homepage": "",
   "author": {
@@ -27,7 +27,8 @@
     "eslint-config-prettier": "^6.6.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-config-xo": "^0.27.2",
-    "jest": "^24.8.0"
+    "jest": "^24.8.0",
+    "fs-extra": "^9.0.0"
   },
   "engines": {
     "npm": ">= 4.0.0"
@@ -73,7 +74,6 @@
     ]
   },
   "scripts": {
-    "pretest": "eslint .",
     "test": "jest"
   },
   "repository": "TaoriYu/generator-react-ts-component-dir",
