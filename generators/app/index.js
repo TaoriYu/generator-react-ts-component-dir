@@ -81,7 +81,7 @@ module.exports = class extends Generator {
 
   _createStylesOption() {
     return this.option('styles', {
-      desc: 'styles will not be generated if this option is added',
+      desc: 'styles will be generated if this option is added',
       alias: 's',
       type: Boolean,
       default: true
